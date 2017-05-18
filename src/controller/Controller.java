@@ -1,40 +1,81 @@
 package controller;
 
-import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
-import arvore.ArvoreAvl;
+import arvore.AVLTree;
 
 public class Controller {
 	
-	static ArrayList<ArvoreAvl> arvores = new ArrayList<ArvoreAvl>(); //array list de arvores
+	static ArrayList<AVLTree<String>> arvores = new ArrayList<AVLTree<String>>(); //array list de arvores
+	static ArrayList<String> dados = new ArrayList<String>();
 	
 	
 	
-	
-	static public ArrayList<ArvoreAvl> abrirArquivo(JFileChooser fs){
+	static public String[] criaArvores(JFileChooser fs){
 		try{
 			File fi = fs.getSelectedFile();
-			BufferedReader arq = new BufferedReader( new FileReader(fi.getPath()));
-			String linha = arq.readLine(); // lê a primeira linha
+			
+			Scanner scanner = new Scanner(new FileReader(fi.getPath())).useDelimiter("\\n");
+			String linha = scanner.next();
 			String[] colunas = linha.split(";");
+			String[] nomeDosItens = colunas;
+			//criar as arvores
 			for(String a : colunas){
-				ArvoreAvl raiz = new ArvoreAvl(a);
+				AVLTree<String>raiz = new AVLTree<String>(a);
 				arvores.add(raiz);				
 			}
-			//inserir todas as linhas nas arvores
+			//ler o arquivo com o arraylist
+			int tamC = colunas.length;
+			while (scanner.hasNext()) {
+				dados.add(scanner.next());
+			}
+			scanner.close();
+			//inserir os elementos na arvore
+			int tamL = dados.size();
+			for(int i = 0; i < tamL; i++){
+				colunas = dados.get(i).split(";");
+				for(int j = 0; j < tamC; j++){
+					//cada arvore será inserido um dado da coluna e o indice do array
+					arvores.get(j).insert(colunas[j], i);
+				}
+			}
 			
-			arq.close();
-			return arvores; //arvores lista
+			return nomeDosItens;
 		}catch(IOException ef){
 			JOptionPane.showMessageDialog(null, ef.getMessage());
 			return null;
 		}
 	}
+
+
+
+	public static ArrayList<AVLTree<String>> getArvores() {
+		return arvores;
+	}
+
+
+
+	public static void setArvores(ArrayList<AVLTree<String>> arvores) {
+		Controller.arvores = arvores;
+	}
+
+
+
+	public static ArrayList<String> getDados() {
+		return dados;
+	}
+
+
+
+	public static void setDados(ArrayList<String> dados) {
+		Controller.dados = dados;
+	}
+	
+	
 }

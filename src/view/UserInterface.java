@@ -1,5 +1,4 @@
 package view;
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -13,23 +12,12 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import arvore.ArvoreAvl;
-
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class UserInterface extends JFrame {
@@ -58,13 +46,13 @@ public class UserInterface extends JFrame {
 	 */
 	public UserInterface() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 694, 536);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JComboBox<ArvoreAvl> comboBox = new JComboBox<ArvoreAvl>();
-		comboBox.setBounds(143, 31, 252, 24);
+		JComboBox<String> comboBox = new JComboBox<String>();
+		comboBox.setBounds(253, 31, 312, 24);
 		
 		JMenuItem mntmAbrir = new JMenuItem("Abrir");
 		mntmAbrir.addMouseListener(new MouseAdapter() {
@@ -77,21 +65,13 @@ public class UserInterface extends JFrame {
 				//Abrir Arquivo
 				int result = fs.showOpenDialog(null);
 				if(result == JFileChooser.APPROVE_OPTION){
-					ArrayList<ArvoreAvl> arvores;
-					arvores = controller.Controller.abrirArquivo(fs);
-					//try{
-						//File fi = fs.getSelectedFile();
-						//BufferedReader arq = new BufferedReader( new FileReader(fi.getPath()));
-						//String linha = arq.readLine(); // lê a primeira linha
-						//String[] colunas = linha.split(";");
-						
-						for(ArvoreAvl a : arvores){
-							comboBox.addItem(a);
-						}
-						//arq.close();
-					//}catch(IOException ef){
-						//JOptionPane.showMessageDialog(null, ef.getMessage());
-					//}
+					String[] nomeDosItens;
+					
+					nomeDosItens = controller.Controller.criaArvores(fs);
+					for(String a : nomeDosItens){
+						comboBox.addItem(a);
+						System.out.println(a);
+					}
 				}
 			}
 		});
@@ -105,15 +85,15 @@ public class UserInterface extends JFrame {
 		contentPane.add(comboBox);
 		
 		JLabel lblBuscarPor = new JLabel("Buscar Por:");
-		lblBuscarPor.setBounds(35, 31, 109, 24);
+		lblBuscarPor.setBounds(111, 31, 109, 24);
 		contentPane.add(lblBuscarPor);
 		
 		JLabel lblPalavraChave = new JLabel("Palavra Chave:");
-		lblPalavraChave.setBounds(35, 96, 109, 24);
+		lblPalavraChave.setBounds(111, 96, 109, 24);
 		contentPane.add(lblPalavraChave);
 		
 		textField = new JTextField();
-		textField.setBounds(143, 97, 158, 24);
+		textField.setBounds(253, 97, 218, 24);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
@@ -121,15 +101,42 @@ public class UserInterface extends JFrame {
 		
 		btnBuscar.setForeground(Color.WHITE);
 		btnBuscar.setBackground(Color.ORANGE);
-		btnBuscar.setBounds(313, 96, 82, 25);
+		btnBuscar.setBounds(483, 96, 82, 25);
 		contentPane.add(btnBuscar);
 		
 		JTextArea textArea = new JTextArea();
-		textArea.setBounds(35, 132, 360, 106);
-		btnBuscar.addActionListener(new ActionListener() {//Ação do butão
+		textArea.setBounds(111, 188, 454, 182);
+		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//String item = (String)comboBox.getSelectedItem();
-				//textArea.setText(item);
+				
+				int comboBoxIndex = comboBox.getSelectedIndex();
+				String text = textField.getText();
+				
+				if(text != null && text != "" && comboBoxIndex != -1){
+					int ind = controller.Controller.getArvores().get(comboBoxIndex).search(text);
+		
+					if(ind != -1){
+						String dado = controller.Controller.getDados().get(ind);
+						textArea.setText(dado);
+					}else{
+						textArea.setText("");
+					}
+				}
+//				
+//				System.out.println(text);
+//				
+//					
+//					int ind =item.search(text);
+//					
+//					System.out.println(ind);
+//					if(ind != -1){
+//						String dado = controller.Controller.getDados().get(ind);
+//						textArea.setText(dado);
+//					}else{
+//						textArea.setText("");
+//					}
+//				}
+				
 			}
 		});
 		
