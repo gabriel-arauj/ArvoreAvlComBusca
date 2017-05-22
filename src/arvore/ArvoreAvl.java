@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class ArvoreAvl {
 
+
+
+    //demora de mais
   protected No raiz;
   String nomeArvore;
 
