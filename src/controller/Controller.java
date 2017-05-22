@@ -8,16 +8,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 import arvoreGenerica.AVLTree;
 
 public class Controller {
 	
-	static ArrayList<AVLTree<String>> arvores = new ArrayList<AVLTree<String>>(); //array list de arvores
-	static ArrayList<String> dados = new ArrayList<String>();
+	public static ArrayList<AVLTree<String>> arvores = new ArrayList<AVLTree<String>>(); //array list de arvores
+	public static ArrayList<String> dados = new ArrayList<String>();
 	
 	
 	
 	static public String[] criaArvores(JFileChooser fs){
+		
+		dados = new ArrayList<String>();
+		arvores = new ArrayList<AVLTree<String>>();
+		
 		try{
 			File fi = fs.getSelectedFile();
 			
@@ -40,12 +46,12 @@ public class Controller {
 			int tamL = dados.size();
 			for(int i = 0; i < tamL; i++){
 				colunas = dados.get(i).split(";");
+				
 				for(int j = 0; j < tamC; j++){
 					//cada arvore será inserido um dado da coluna e o indice do array
-					arvores.get(j).insert(colunas[j], i);
+					arvores.get(j).insert(colunas[j].toUpperCase(), i);
 				}
 			}
-			
 			return nomeDosItens;
 		}catch(IOException ef){
 			JOptionPane.showMessageDialog(null, ef.getMessage());

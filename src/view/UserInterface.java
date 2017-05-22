@@ -14,17 +14,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import controller.Controller;
+import javax.swing.JScrollPane;
 
 
 public class UserInterface extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -42,18 +49,39 @@ public class UserInterface extends JFrame {
 		});
 	}
 
+	
+	
+	
+	public void limparTabela(DefaultTableModel modelo){
+		int row = modelo.getRowCount();
+		for(int i = 0; i < row; i++)
+			modelo.removeRow(0);
+	}
+	public void preencheTabela(DefaultTableModel modelo){
+		int tamL = controller.Controller.dados.size();
+		for(int i = 0; i < tamL; i++){
+			String [] colunas = controller.Controller.dados.get(i).split(";");
+			
+			modelo.addRow(colunas);
+		}
+	}
+	
+	
 	/**
 	 * Create the frame.
 	 */
 	public UserInterface() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 694, 536);
+		setBounds(100, 100, 1024, 536);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
 		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setBounds(253, 31, 312, 24);
+		comboBox.setBounds(253, 31, 625, 24);
+		DefaultTableModel modelo = new DefaultTableModel();
+		
+		
 		
 		JMenuItem mntmAbrir = new JMenuItem("Abrir");
 		mntmAbrir.addMouseListener(new MouseAdapter() {
@@ -67,12 +95,16 @@ public class UserInterface extends JFrame {
 				int result = fs.showOpenDialog(null);
 				if(result == JFileChooser.APPROVE_OPTION){
 					String[] nomeDosItens;
-					
+					comboBox.removeAllItems();
+					limparTabela(modelo);
 					nomeDosItens = controller.Controller.criaArvores(fs);
+					modelo.setColumnIdentifiers(nomeDosItens);
+					
 					for(String a : nomeDosItens){
 						comboBox.addItem(a);
-						System.out.println(a);
+						//System.out.println(a);
 					}
+					preencheTabela(modelo);
 				}
 			}
 		});
@@ -82,7 +114,13 @@ public class UserInterface extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(111, 155, 767, 276);
+		contentPane.add(scrollPane);
 		
+		table = new JTable();
+		table.setModel(modelo);
+		scrollPane.setViewportView(table);
 		contentPane.add(comboBox);
 		
 		JLabel lblBuscarPor = new JLabel("Buscar Por:");
@@ -94,7 +132,7 @@ public class UserInterface extends JFrame {
 		contentPane.add(lblPalavraChave);
 		
 		textField = new JTextField();
-		textField.setBounds(253, 97, 218, 24);
+		textField.setBounds(253, 97, 421, 24);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
@@ -102,11 +140,10 @@ public class UserInterface extends JFrame {
 		
 		btnBuscar.setForeground(Color.WHITE);
 		btnBuscar.setBackground(Color.ORANGE);
-		btnBuscar.setBounds(483, 96, 82, 25);
+		btnBuscar.setBounds(718, 96, 160, 25);
 		contentPane.add(btnBuscar);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(111, 188, 454, 182);
+		// buscar
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -114,36 +151,23 @@ public class UserInterface extends JFrame {
 				String text = textField.getText();
 				
 				if(text != null && text != "" && comboBoxIndex != -1){
-					ArrayList<Integer> ind = controller.Controller.getArvores().get(comboBoxIndex).search(text);
-		
-					if(!ind.isEmpty()){
+					ArrayList<Integer> ind = controller.Controller.getArvores().get(comboBoxIndex).search(text.toUpperCase());
+					
+					/***botar um butão carregar todos os dados***/
+					
+					if(ind != null){
+						limparTabela(modelo);
 						for(int i : ind){
 							String dado = controller.Controller.getDados().get(i);
-						textArea.setText(dado);
+							modelo.addRow(dado.split(";"));
 						}
 						
 					}else{
-						textArea.setText("");
+						JOptionPane.showMessageDialog(null, "Palavra chave não encontrada");
 					}
-				}
-//				
-//				System.out.println(text);
-//				
-//					
-//					int ind =item.search(text);
-//					
-//					System.out.println(ind);
-//					if(ind != -1){
-//						String dado = controller.Controller.getDados().get(ind);
-//						textArea.setText(dado);
-//					}else{
-//						textArea.setText("");
-//					}
-//				}
+				}			
 				
 			}
 		});
-		
-		contentPane.add(textArea);
 	}
 }
