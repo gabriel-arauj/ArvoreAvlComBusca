@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import arvore.AVLTree;
+import arvoreGenerica.AVLTree;
 
 public class Controller {
 	
@@ -27,7 +27,7 @@ public class Controller {
 			String[] nomeDosItens = colunas;
 			//criar as arvores
 			for(String a : colunas){
-				AVLTree<String>raiz = new AVLTree<String>(a);
+				AVLTree<String>raiz = new AVLTree<String>();
 				arvores.add(raiz);				
 			}
 			//ler o arquivo com o arraylist

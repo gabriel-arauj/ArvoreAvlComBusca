@@ -18,6 +18,7 @@ import javax.swing.JFileChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 
 public class UserInterface extends JFrame {
@@ -113,11 +114,14 @@ public class UserInterface extends JFrame {
 				String text = textField.getText();
 				
 				if(text != null && text != "" && comboBoxIndex != -1){
-					int ind = controller.Controller.getArvores().get(comboBoxIndex).search(text);
+					ArrayList<Integer> ind = controller.Controller.getArvores().get(comboBoxIndex).search(text);
 		
-					if(ind != -1){
-						String dado = controller.Controller.getDados().get(ind);
+					if(!ind.isEmpty()){
+						for(int i : ind){
+							String dado = controller.Controller.getDados().get(i);
 						textArea.setText(dado);
+						}
+						
 					}else{
 						textArea.setText("");
 					}

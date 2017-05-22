@@ -60,7 +60,7 @@ public class AVLTree<T extends Comparable<T>> {
 			node = new Node<T>(node.getData(), insert(node.getLeft(), data, indice),
 					node.getRight(), indice);
 			// node.setLeft(insert(node.getLeft(), data));
-		} else if (node.getData().compareTo(data) <= 0) {
+		} else if (node.getData().compareTo(data) < 0) {
 			// node.setRight(insert(node.getRight(), data));
 			node = new Node<T>(node.getData(), node.getLeft(), insert(
 					node.getRight(), data, indice), indice);
@@ -115,8 +115,9 @@ public class AVLTree<T extends Comparable<T>> {
 	public int search(String data) {
 		Node<T> local = root;
 		while (local != null) {
-			if (local.getData().compareToIgnoreCase(data) == 0)
-				return local.getIndice();
+			if (local.getData().compareToIgnoreCase(data) == 0){
+				System.out.println(local.getData()+"-" + local.getIndice());
+				return local.getIndice();}
 			else if (local.getData().compareToIgnoreCase(data) > 0)
 				local = local.getLeft();
 			else
