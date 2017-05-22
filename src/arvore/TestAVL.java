@@ -2,7 +2,7 @@ package arvore;
 
 public class TestAVL {
 
-	
+	//essa arvore não funciona
 	
 	public static void main(String[] args) {
 
@@ -19,6 +19,7 @@ public class TestAVL {
 		tree.PrintTree();
 		int j = tree.search("0");
 		System.out.println(j);
+		
 	}
 }
 	
