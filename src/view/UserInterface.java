@@ -52,16 +52,10 @@ public class UserInterface extends JFrame {
 	
 	
 	
-	public void limparTabela(DefaultTableModel modelo){
-		int row = modelo.getRowCount();
-		for(int i = 0; i < row; i++)
-			modelo.removeRow(0);
-	}
 	public void preencheTabela(DefaultTableModel modelo){
 		int tamL = controller.Controller.dados.size();
 		for(int i = 0; i < tamL; i++){
 			String [] colunas = controller.Controller.dados.get(i).split(";");
-			
 			modelo.addRow(colunas);
 		}
 	}
@@ -96,7 +90,7 @@ public class UserInterface extends JFrame {
 				if(result == JFileChooser.APPROVE_OPTION){
 					String[] nomeDosItens;
 					comboBox.removeAllItems();
-					limparTabela(modelo);
+					modelo.setRowCount(0);
 					nomeDosItens = controller.Controller.criaArvores(fs);
 					modelo.setColumnIdentifiers(nomeDosItens);
 					
@@ -156,7 +150,7 @@ public class UserInterface extends JFrame {
 					/***botar um butão carregar todos os dados***/
 					
 					if(ind != null){
-						limparTabela(modelo);
+						modelo.setRowCount(0);
 						for(int i : ind){
 							String dado = controller.Controller.getDados().get(i);
 							modelo.addRow(dado.split(";"));
